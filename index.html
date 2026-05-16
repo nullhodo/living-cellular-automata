@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Living Cellular Automata</title>
+    <!-- p5.js ライブラリ -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- ツールウィンドウ切り替えボタン -->
+    <div id="toggle-btn" onclick="toggleToolWindow()">⚙</div>
+
+    <!-- ツールウィンドウ -->
+    <div id="tool-window">
+        <h3 style="margin-top: 0; border-bottom: 1px solid #444; padding-bottom: 10px;">Living CA Controller</h3>
+
+        <div id="recording-status">REC ● <span id="rec-time">00:00</span></div>
+
+        <div class="control-group">
+            <label>プリセットパレット</label>
+            <select id="palette-select" onchange="applyPaletteFromSelect()"></select>
+            <button onclick="applyRandomPalette()">🎲 ランダムパレット</button>
+        </div>
+
+        <div class="control-group" id="sliders-container">
+            <!-- スライダーはJSで動的に生成されます -->
+        </div>
+
+        <div class="control-group">
+            <button onclick="randomizeParams()">🎲 パラメータをランダム化</button>
+            <div style="display: flex; gap: 5px;">
+                <button onclick="undo()">↶ Undo</button>
+                <button onclick="redo()">↷ Redo</button>
+            </div>
+            <button id="debug-btn" onclick="toggleDebug()">デバッグモード: OFF</button>
+        </div>
+
+        <div class="control-group">
+            <button class="primary" onclick="exportHighResImage()">📷 高解像度画像書き出し</button>
+            <button id="rec-btn" onclick="toggleRecording()">🎥 録画開始 (R)</button>
+        </div>
+        
+        <div class="control-group">
+            <label>設定復元 (JSONCファイルをドロップ)</label>
+            <input type="file" id="file-input" accept=".json, .jsonc" onchange="loadSettingsFromFile(this)" style="font-size: 10px;">
+        </div>
+    </div>
+
+<script src="sketch.js"></script>
+</body>
+</html>
