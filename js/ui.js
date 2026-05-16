@@ -104,7 +104,7 @@ function initializeUI() {
   createSlider("range", "Range (Radius)", 1, 5, 1);
   createSlider("states", "States (Colors)", 2, 16, 1);
   createSlider("noise", "Noise (Mutation)", 0, 0.1, 0.001);
-  createSlider("speed", "Speed", 1, 10, 1);
+  createSlider("speed", "Speed", 0, 20, 1);
 
   // キー入力イベント
   window.addEventListener("keydown", (e) => {

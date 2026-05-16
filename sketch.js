@@ -27,9 +27,11 @@ function windowResized() {
 function draw() {
   background(20);
 
-  let updateFreq = Math.floor(map(params.speed, 1, 10, 10, 1));
-  if (frameCount % updateFreq === 0) {
-    updateGrid();
+  if (params.speed > 0) {
+    let updateFreq = Math.floor(map(params.speed, 1, 20, 40, 1));
+    if (frameCount % updateFreq === 0) {
+      updateGrid();
+    }
   }
 
   renderGridToImage();
