@@ -132,7 +132,7 @@ function initializeUI() {
 
   createSlider("cellSize", "Cell Size (px)", 1, 20, 1);
   createSlider("threshold", "Threshold (Neighbors)", 1, 8, 1);
-  createSlider("range", "Range (Radius)", 1, 5, 1);
+  createSlider("range", "Range (Radius)", 1, 10, 0.1);
   createSlider("states", "States (Colors)", 2, 16, 1);
   createCheckbox("useNoise", "Enable Noise");
   createSlider("noise", "Noise (Mutation)", 0, 0.1, 0.001);

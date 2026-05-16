@@ -29,7 +29,8 @@ function updatePaletteCache() {
 function updateGrid() {
   let numColors = paletteCache.length;
   let activeStates = Math.min(params.states, numColors);
-  let r = params.range;
+  let maxR = Math.ceil(params.range);
+  let rSq = params.range * params.range;
   let threshold = params.threshold;
 
   let cols = columns;
@@ -45,17 +46,18 @@ function updateGrid() {
       let nextStateVal = (state + 1) % activeStates;
       let count = 0;
 
-      for (let dy = -r; dy <= r; dy++) {
+      for (let dy = -maxR; dy <= maxR; dy++) {
         let ny = (y + dy + rw) % rw;
         let yOffset = ny * cols;
 
-        for (let dx = -r; dx <= r; dx++) {
+        for (let dx = -maxR; dx <= maxR; dx++) {
           if (dx === 0 && dy === 0) continue;
-
-          let nx = (x + dx + cols) % cols;
-
-          if (grid[nx + yOffset] === nextStateVal) {
-            count++;
+          
+          if (dx * dx + dy * dy <= rSq) {
+            let nx = (x + dx + cols) % cols;
+            if (grid[nx + yOffset] === nextStateVal) {
+              count++;
+            }
           }
         }
       }
