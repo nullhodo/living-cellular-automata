@@ -125,6 +125,7 @@ let params = {
   range: 1, 
   states: 5, 
   noise: 0.0, 
+  useNoise: false, 
   speed: 1, 
   currentColorPalette: [], 
 };

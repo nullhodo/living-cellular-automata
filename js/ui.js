@@ -99,10 +99,42 @@ function initializeUI() {
     params[`_ui_${key}`] = { input, labelEl: div };
   };
 
+  const createCheckbox = (key, label) => {
+    let div = document.createElement("div");
+    div.className = "control-group checkbox-container";
+    div.style.display = "flex";
+    div.style.alignItems = "center";
+    div.style.gap = "8px";
+    div.style.marginBottom = "8px";
+
+    let checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.checked = params[key];
+    checkbox.id = `checkbox-${key}`;
+
+    let labelEl = document.createElement("label");
+    labelEl.htmlFor = `checkbox-${key}`;
+    labelEl.innerText = label;
+    labelEl.style.margin = "0";
+    labelEl.style.cursor = "pointer";
+
+    checkbox.onchange = (e) => {
+      params[key] = e.target.checked;
+      saveState();
+    };
+
+    div.appendChild(checkbox);
+    div.appendChild(labelEl);
+    container.appendChild(div);
+
+    params[`_ui_${key}`] = { input: checkbox, labelEl: div };
+  };
+
   createSlider("cellSize", "Cell Size (px)", 1, 20, 1);
   createSlider("threshold", "Threshold (Neighbors)", 1, 8, 1);
   createSlider("range", "Range (Radius)", 1, 5, 1);
   createSlider("states", "States (Colors)", 2, 16, 1);
+  createCheckbox("useNoise", "Enable Noise");
   createSlider("noise", "Noise (Mutation)", 0, 0.1, 0.001);
   createSlider("speed", "Speed", 0, 20, 1);
 
@@ -310,13 +342,17 @@ function randomizeParams() {
 }
 
 function updateUIFromParams() {
-  const keys = ["cellSize", "threshold", "range", "states", "noise", "speed"];
+  const keys = ["cellSize", "threshold", "range", "states", "noise", "speed", "useNoise"];
   keys.forEach((key) => {
     if (params[`_ui_${key}`]) {
-      params[`_ui_${key}`].input.value = params[key];
-      // divの中からvalクラスを探す
-      const valSpan = params[`_ui_${key}`].labelEl.querySelector(".val");
-      if (valSpan) valSpan.innerText = params[key];
+      const ui = params[`_ui_${key}`];
+      if (ui.input.type === "checkbox") {
+        ui.input.checked = params[key];
+      } else {
+        ui.input.value = params[key];
+        const valSpan = ui.labelEl.querySelector(".val");
+        if (valSpan) valSpan.innerText = params[key];
+      }
     }
   });
 }

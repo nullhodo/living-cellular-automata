@@ -35,7 +35,7 @@ function updateGrid() {
   let cols = columns;
   let rw = rows;
 
-  let hasNoise = params.noise > 0;
+  let hasNoise = params.useNoise && params.noise > 0;
   let noiseProb = params.noise;
 
   for (let y = 0; y < rw; y++) {

@@ -29,6 +29,7 @@ function exportJsonc(baseFilename) {
     range: params.range,
     states: params.states,
     noise: params.noise,
+    useNoise: params.useNoise,
     colors: params.currentColorPalette.map((c) => c.toString()),
   };
 
@@ -40,6 +41,7 @@ function exportJsonc(baseFilename) {
   jsonc += `  "range": ${exportData.range},      // Neighborhood radius\n`;
   jsonc += `  "states": ${exportData.states},     // Number of cyclic states\n`;
   jsonc += `  "noise": ${exportData.noise},    // Mutation probability\n`;
+  jsonc += `  "useNoise": ${exportData.useNoise}, // Whether noise is enabled\n`;
   jsonc += `  "colors": [\n`;
   exportData.colors.forEach((c, i) => {
     jsonc += `    "${c}"${i < exportData.colors.length - 1 ? "," : ""}\n`;
@@ -160,6 +162,7 @@ function loadSettingsFromFile(input) {
       if (data.range) params.range = data.range;
       if (data.states) params.states = data.states;
       if (data.noise !== undefined) params.noise = data.noise;
+      if (data.useNoise !== undefined) params.useNoise = data.useNoise;
       if (data.colors) {
         params.currentColorPalette = data.colors.map((c) => color(c));
         updatePaletteCache();
