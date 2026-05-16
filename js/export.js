@@ -30,6 +30,10 @@ function exportJsonc(baseFilename) {
     states: params.states,
     noise: params.noise,
     useNoise: params.useNoise,
+    useGradient: params.useGradient,
+    gradientColorsCount: params.gradientColorsCount,
+    gradientStartColor: params.gradientStartColor,
+    gradientEndColor: params.gradientEndColor,
     colors: params.currentColorPalette.map((c) => c.toString()),
   };
 
@@ -42,6 +46,10 @@ function exportJsonc(baseFilename) {
   jsonc += `  "states": ${exportData.states},     // Number of cyclic states\n`;
   jsonc += `  "noise": ${exportData.noise},    // Mutation probability\n`;
   jsonc += `  "useNoise": ${exportData.useNoise}, // Whether noise is enabled\n`;
+  jsonc += `  "useGradient": ${exportData.useGradient}, // Whether gradient mode is enabled\n`;
+  jsonc += `  "gradientColorsCount": ${exportData.gradientColorsCount}, // Number of colors in gradient\n`;
+  jsonc += `  "gradientStartColor": "${exportData.gradientStartColor}", // Start color of gradient\n`;
+  jsonc += `  "gradientEndColor": "${exportData.gradientEndColor}", // End color of gradient\n`;
   jsonc += `  "colors": [\n`;
   exportData.colors.forEach((c, i) => {
     jsonc += `    "${c}"${i < exportData.colors.length - 1 ? "," : ""}\n`;
@@ -163,12 +171,20 @@ function loadSettingsFromFile(input) {
       if (data.states) params.states = data.states;
       if (data.noise !== undefined) params.noise = data.noise;
       if (data.useNoise !== undefined) params.useNoise = data.useNoise;
-      if (data.colors) {
+      if (data.useGradient !== undefined) params.useGradient = data.useGradient;
+      if (data.gradientColorsCount !== undefined) params.gradientColorsCount = data.gradientColorsCount;
+      if (data.gradientStartColor !== undefined) params.gradientStartColor = data.gradientStartColor;
+      if (data.gradientEndColor !== undefined) params.gradientEndColor = data.gradientEndColor;
+      
+      if (data.useGradient) {
+        generateGradientPalette();
+      } else if (data.colors) {
         params.currentColorPalette = data.colors.map((c) => color(c));
         updatePaletteCache();
       }
 
       updateUIFromParams();
+      updatePaletteModeUI();
       updateColorPickers();
       initGrid();
       saveState();

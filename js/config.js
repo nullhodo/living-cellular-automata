@@ -122,11 +122,15 @@ let params = {
   title: "Living Cellular Automata",
   cellSize: 4, 
   threshold: 3, 
-  range: 1, 
+  range: 2, 
   states: 5, 
   noise: 0.0, 
   useNoise: false, 
   speed: 1, 
+  useGradient: false,
+  gradientColorsCount: 5,
+  gradientStartColor: "#111111",
+  gradientEndColor: "#EEEEEE",
   currentColorPalette: [], 
 };
 

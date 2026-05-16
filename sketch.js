@@ -28,9 +28,16 @@ function draw() {
   background(20);
 
   if (params.speed > 0) {
-    let updateFreq = Math.floor(map(params.speed, 1, 20, 40, 1));
-    if (frameCount % updateFreq === 0) {
-      updateGrid();
+    let updateFreq = map(params.speed, 1, 20, 10, 0.25);
+    if (updateFreq >= 1) {
+      if (frameCount % Math.floor(updateFreq) === 0) {
+        updateGrid();
+      }
+    } else {
+      let updatesPerFrame = Math.floor(1 / updateFreq);
+      for (let i = 0; i < updatesPerFrame; i++) {
+        updateGrid();
+      }
     }
   }
 

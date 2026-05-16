@@ -10,7 +10,7 @@ function initializeUI() {
   buildCustomPaletteDropdown();
 
   // スライダー生成ヘルパー
-  const createSlider = (key, label, min, max, step) => {
+  const createSlider = (key, label, min, max, step, callback = null) => {
     let div = document.createElement("div");
     div.className = "control-group slider-container";
     
@@ -83,6 +83,7 @@ function initializeUI() {
       params[key] = val;
       valSpan.innerText = val;
       if (key === "cellSize") initGrid();
+      if (callback) callback(val);
     };
 
     input.onchange = () => {
@@ -99,7 +100,7 @@ function initializeUI() {
     params[`_ui_${key}`] = { input, labelEl: div };
   };
 
-  const createCheckbox = (key, label) => {
+  const createCheckbox = (key, label, callback = null) => {
     let div = document.createElement("div");
     div.className = "control-group checkbox-container";
     div.style.display = "flex";
@@ -120,6 +121,7 @@ function initializeUI() {
 
     checkbox.onchange = (e) => {
       params[key] = e.target.checked;
+      if (callback) callback(e.target.checked);
       saveState();
     };
 
@@ -137,6 +139,16 @@ function initializeUI() {
   createCheckbox("useNoise", "Enable Noise");
   createSlider("noise", "Noise (Mutation)", 0, 0.1, 0.001);
   createSlider("speed", "Speed", 0, 20, 1);
+  createCheckbox("useGradient", "Gradation Mode", () => {
+    updatePaletteModeUI();
+    if (params.useGradient) generateGradientPalette();
+    else applyPaletteFromSelect();
+  });
+  createSlider("gradientColorsCount", "Gradient Colors", 2, 7, 1, () => {
+    if (params.useGradient) generateGradientPalette();
+  });
+
+  updatePaletteModeUI();
 
   // キー入力イベント
   window.addEventListener("keydown", (e) => {
@@ -258,6 +270,7 @@ function toggleDebug() {
 }
 
 function applyPaletteByIndex(index) {
+  if (params.useGradient) return;
   const p = paletteDefinitions[index];
   params.currentColorPalette = p.colors.map((c) =>
     color(c.rgb[0], c.rgb[1], c.rgb[2])
@@ -288,6 +301,37 @@ function applyPaletteByIndex(index) {
   updateColorPickers();
 }
 
+function updatePaletteModeUI() {
+  const dropdownContainer = document.getElementById("palette-dropdown-container");
+  const randBtn = document.querySelector("button[onclick='applyRandomPalette()']");
+  const gradientSlider = params[`_ui_gradientColorsCount`] ? params[`_ui_gradientColorsCount`].labelEl : null;
+
+  if (params.useGradient) {
+    if (dropdownContainer) dropdownContainer.style.display = "none";
+    if (randBtn) randBtn.style.display = "none";
+    if (gradientSlider) gradientSlider.style.display = "block";
+  } else {
+    if (dropdownContainer) dropdownContainer.style.display = "block";
+    if (randBtn) randBtn.style.display = "block";
+    if (gradientSlider) gradientSlider.style.display = "none";
+  }
+  updateColorPickers();
+}
+
+function generateGradientPalette() {
+  const c1 = color(params.gradientStartColor);
+  const c2 = color(params.gradientEndColor);
+  const n = params.gradientColorsCount;
+  
+  params.currentColorPalette = [];
+  for (let i = 0; i < n; i++) {
+    let amt = n <= 1 ? 0 : i / (n - 1);
+    params.currentColorPalette.push(lerpColor(c1, c2, amt));
+  }
+  updatePaletteCache();
+  updateColorPickers();
+}
+
 function applyPaletteFromSelect() {
   const index = document.getElementById("palette-select").value;
   applyPaletteByIndex(parseInt(index));
@@ -310,39 +354,75 @@ function updateColorPickers() {
     pickerContainer.className = "control-group";
     container.appendChild(pickerContainer);
   }
-  pickerContainer.innerHTML = '<label>Palette Colors</label><div style="display:flex; flex-wrap:wrap; gap:5px;"></div>';
-  const flexBox = pickerContainer.querySelector("div");
-
-  params.currentColorPalette.forEach((c, i) => {
-    let input = document.createElement("input");
-    input.type = "color";
-    input.value = "#" + hex(red(c), 2) + hex(green(c), 2) + hex(blue(c), 2);
-    input.oninput = (e) => {
-      let newCol = color(e.target.value);
-      params.currentColorPalette[i] = newCol;
-      updatePaletteCache(); 
+  
+  if (params.useGradient) {
+    pickerContainer.innerHTML = '<label>Gradient Colors (Start / End)</label><div style="display:flex; gap:5px;"></div>';
+    const flexBox = pickerContainer.querySelector("div");
+    
+    let inputStart = document.createElement("input");
+    inputStart.type = "color";
+    inputStart.value = params.gradientStartColor;
+    inputStart.oninput = (e) => {
+      params.gradientStartColor = e.target.value;
+      generateGradientPalette();
     };
-    input.onchange = () => saveState(); 
-    flexBox.appendChild(input);
-  });
+    inputStart.onchange = () => saveState();
+    flexBox.appendChild(inputStart);
+    
+    let inputEnd = document.createElement("input");
+    inputEnd.type = "color";
+    inputEnd.value = params.gradientEndColor;
+    inputEnd.oninput = (e) => {
+      params.gradientEndColor = e.target.value;
+      generateGradientPalette();
+    };
+    inputEnd.onchange = () => saveState();
+    flexBox.appendChild(inputEnd);
+
+  } else {
+    pickerContainer.innerHTML = '<label>Palette Colors</label><div style="display:flex; flex-wrap:wrap; gap:5px;"></div>';
+    const flexBox = pickerContainer.querySelector("div");
+
+    params.currentColorPalette.forEach((c, i) => {
+      let input = document.createElement("input");
+      input.type = "color";
+      input.value = "#" + hex(red(c), 2) + hex(green(c), 2) + hex(blue(c), 2);
+      input.oninput = (e) => {
+        let newCol = color(e.target.value);
+        params.currentColorPalette[i] = newCol;
+        updatePaletteCache(); 
+      };
+      input.onchange = () => saveState(); 
+      flexBox.appendChild(input);
+    });
+  }
 }
 
 function randomizeParams() {
   params.cellSize = floor(random(2, 10));
   params.threshold = floor(random(1, 6));
-  params.range = floor(random(1, 3));
+  params.range = random(1, 5); // Allow fractional range in randomize
   params.states = floor(random(2, 6));
   params.noise = random(0, 0.01);
   params.speed = floor(random(5, 11));
 
-  applyRandomPalette();
+  if (params.useGradient) {
+    params.gradientColorsCount = floor(random(2, 8));
+    params.gradientStartColor = "#" + hex(floor(random(256)), 2) + hex(floor(random(256)), 2) + hex(floor(random(256)), 2);
+    params.gradientEndColor = "#" + hex(floor(random(256)), 2) + hex(floor(random(256)), 2) + hex(floor(random(256)), 2);
+    generateGradientPalette();
+  } else {
+    applyRandomPalette();
+  }
+  
   updateUIFromParams();
+  updateColorPickers();
   initGrid();
   saveState();
 }
 
 function updateUIFromParams() {
-  const keys = ["cellSize", "threshold", "range", "states", "noise", "speed", "useNoise"];
+  const keys = ["cellSize", "threshold", "range", "states", "noise", "speed", "useNoise", "useGradient", "gradientColorsCount"];
   keys.forEach((key) => {
     if (params[`_ui_${key}`]) {
       const ui = params[`_ui_${key}`];

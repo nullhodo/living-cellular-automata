@@ -30,6 +30,7 @@ function restoreState(state) {
   updatePaletteCache();
 
   updateUIFromParams();
+  updatePaletteModeUI();
   updateColorPickers();
   initGrid();
 }
