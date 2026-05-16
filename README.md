@@ -1,31 +1,38 @@
 # Living Cellular Automata
 
-Living Cellular Automata is a web-based simulation of Cyclic Cellular Automata, built using p5.js. It features a customizable grid where cells change state based on their neighbors, creating dynamic, living patterns.
+Living Cellular Automata（リビング・セル・オートマタ）は、p5.jsを用いて構築された「Cyclic Cellular Automata（巡回型セル・オートマトン）」のウェブブラウザ向けシミュレーションです。カスタマイズ可能なグリッド上で、隣接するセルの状態に応じて各セルが状態を変化させ、まるで生き物のように動的で美しいパターンを描き出します。
 
-## Features
-- **Real-time Simulation**: Smooth and interactive cellular automata simulation.
-- **Customizable Parameters**: Adjust cell size, threshold, neighborhood range, number of states (colors), mutation noise, and simulation speed.
-- **Color Palettes**: Choose from a variety of beautifully curated preset palettes or generate random ones.
-- **High-Resolution Export**: Capture the current state as a high-resolution image.
-- **Video Recording**: Record the simulation as a WebM video directly from the browser.
-- **State Management**: Undo/Redo support, and the ability to save/load settings via JSONC files.
+## 主な機能
+- **リアルタイムシミュレーション**: なめらかでインタラクティブなセル・オートマトンのシミュレーションを提供します。
+- **パラメータのカスタマイズ**: セルのサイズ、変化に必要な隣接セルの数（しきい値）、近傍の範囲（半径）、状態の数（色数）、突然変異の確率（ノイズ）、そしてシミュレーションの更新速度を細かく調整できます。また、各パラメータごとに個別のランダム化も可能です。
+- **カラーパレット**: 厳選された美しいプリセットパレットから選択、またはランダムにパレットを生成できます。カスタムドロップダウンで色を視覚的に確認できます。
+- **高画質エクスポート**: 現在のシミュレーション状態を、レイアウトを崩さずに高解像度の画像として書き出せます。
+- **動画録画機能**: ブラウザ上から直接、シミュレーションの様子をWebM形式の動画として録画・保存できます。
+- **状態管理**: Undo/Redo（元に戻す/やり直し）機能や、JSONCファイルを用いた設定の保存と読み込み（ドラッグ＆ドロップ）に対応しています。
 
-## How to Use
-1. Open `index.html` in your web browser.
-2. Use the **Tool Window** on the right to tweak parameters:
-   - **Pre-set Palettes**: Change the visual theme.
-   - **Cell Size**: Adjust the resolution of the grid.
-   - **Threshold / Range / States**: Modify the rules of the cyclic cellular automaton.
-   - **Noise**: Add random mutations to the grid.
-   - **Speed**: Control how often the grid updates.
-3. Use the **Camera** button to export an image, or the **Record** button to capture a video.
-4. Drag and drop a saved `.jsonc` file onto the window to restore previous settings.
+## 使い方
+1. ウェブブラウザで `index.html` を開きます。
+2. 画面右側の **ツールウィンドウ** を使って、各種パラメータを調整します。
+   - **プリセットパレット**: 視覚的なテーマを変更します（色のスウォッチが表示されます）。
+   - **Cell Size**: グリッドの解像度（セルの大きさ）を調整します。
+   - **Threshold / Range / States**: 巡回型セル・オートマトンのルール（しきい値、半径、色数）を変更します。
+   - **Noise**: グリッドにランダムな突然変異を追加します。
+   - **Speed**: グリッドの更新頻度を制御します。
+   - 各スライダーには「？」アイコンのツールチップが備わっており、専用の「🎲」ボタンでパラメータごとにランダム化できます。
+3. **📷 高解像度画像書き出し** ボタンで画像をエクスポートするか、**🎥 録画開始** ボタンで動画をキャプチャします。
+4. 保存された `.jsonc` ファイルをウィンドウ上にドラッグ＆ドロップすることで、以前の設定を簡単に復元できます。
 
-## Project Structure
-- `index.html`: The main HTML file containing the structure and UI.
-- `style.css`: The styling for the UI and canvas.
-- `sketch.js`: The p5.js logic for the cellular automata simulation.
+## プロジェクト構成
+- `index.html`: 構造とUIを含むメインのHTMLファイルです。
+- `style.css`: UIおよびキャンバスのスタイル定義ファイルです。
+- `js/`: 各機能ごとに分割されたJavaScriptファイルが格納されています。
+  - `config.js`: 初期設定とカラーパレットの定義。
+  - `ca.js`: セル・オートマトンのシミュレーションロジック。
+  - `ui.js`: ツールチップやカスタムドロップダウンを含むUI制御。
+  - `export.js`: 画像および動画の書き出し処理。
+  - `history.js`: Undo / Redoによる履歴管理機能。
+- `sketch.js`: p5.jsのメインループ処理。
 
-## Technologies Used
+## 使用技術
 - HTML5, CSS3, JavaScript
-- [p5.js](https://p5js.org/) for canvas rendering and logic.
+- [p5.js](https://p5js.org/): キャンバス描画とシミュレーションロジックに使用。

@@ -1,172 +1,296 @@
 body {
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
-            background-color: #111;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            color: #eee;
-        }
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #111;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #eee;
+}
 
-        canvas {
-            display: block;
-            image-rendering: pixelated; /* ドットをくっきり表示 */
-        }
+canvas {
+    display: block;
+    image-rendering: pixelated; /* ドットをくっきり表示 */
+}
 
-        /* ツールウィンドウ (オーバーレイ) */
-        #tool-window {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            width: 320px;
-            max-height: 90vh;
-            background-color: rgba(20, 20, 30, 0.85);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 8px;
-            padding: 15px;
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-            overflow-y: auto;
-            transition: transform 0.3s ease, opacity 0.3s ease;
-            z-index: 100;
-        }
+/* ツールウィンドウ (オーバーレイ) */
+#tool-window {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 320px;
+    max-height: 90vh;
+    background-color: rgba(20, 20, 30, 0.85);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    overflow-y: auto;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    z-index: 100;
+}
 
-        #tool-window.hidden {
-            transform: translateX(120%);
-            opacity: 0;
-            pointer-events: none;
-        }
+#tool-window.hidden {
+    transform: translateX(120%);
+    opacity: 0;
+    pointer-events: none;
+}
 
-        /* UI コントロール */
-        .control-group {
-            margin-bottom: 15px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            padding-bottom: 10px;
-        }
+/* UI コントロール */
+.control-group {
+    margin-bottom: 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 10px;
+}
 
-        .control-group:last-child {
-            border-bottom: none;
-        }
+.control-group:last-child {
+    border-bottom: none;
+}
 
-        label {
-            display: flex;
-            justify-content: space-between;
-            font-size: 12px;
-            margin-bottom: 4px;
-            color: #ccc;
-        }
+label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    margin-bottom: 4px;
+    color: #ccc;
+}
 
-        input[type="range"] {
-            width: 100%;
-            cursor: pointer;
-        }
+input[type="range"] {
+    width: 100%;
+    cursor: pointer;
+}
 
-        input[type="color"] {
-            border: none;
-            width: 100%;
-            height: 30px;
-            cursor: pointer;
-            background: none;
-        }
+input[type="color"] {
+    border: none;
+    width: 100%;
+    height: 30px;
+    cursor: pointer;
+    background: none;
+}
 
-        button {
-            width: 100%;
-            padding: 8px;
-            margin-bottom: 6px;
-            background-color: #333;
-            color: #fff;
-            border: 1px solid #555;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 12px;
-            transition: background 0.2s;
-        }
+button {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 6px;
+    background-color: #333;
+    color: #fff;
+    border: 1px solid #555;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: background 0.2s;
+}
 
-        button:hover {
-            background-color: #444;
-        }
+button:hover {
+    background-color: #444;
+}
 
-        button.primary {
-            background-color: #2a6fdb;
-            border-color: #2a6fdb;
-        }
-        button.primary:hover {
-            background-color: #3b82f6;
-        }
+button.primary {
+    background-color: #2a6fdb;
+    border-color: #2a6fdb;
+}
+button.primary:hover {
+    background-color: #3b82f6;
+}
 
-        button.danger {
-            background-color: #c53030;
-            border-color: #c53030;
-        }
-        button.danger:hover {
-            background-color: #e53e3e;
-        }
+button.danger {
+    background-color: #c53030;
+    border-color: #c53030;
+}
+button.danger:hover {
+    background-color: #e53e3e;
+}
 
-        button.recording {
-            background-color: #e53e3e;
-            animation: pulse 2s infinite;
-        }
+button.recording {
+    background-color: #e53e3e;
+    animation: pulse 2s infinite;
+}
 
-        select {
-            width: 100%;
-            padding: 6px;
-            background: #222;
-            color: #fff;
-            border: 1px solid #555;
-            border-radius: 4px;
-            margin-bottom: 8px;
-        }
+select {
+    width: 100%;
+    padding: 6px;
+    background: #222;
+    color: #fff;
+    border: 1px solid #555;
+    border-radius: 4px;
+    margin-bottom: 8px;
+}
 
-        /* トグルボタン */
-        #toggle-btn {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            z-index: 101;
-            width: 40px;
-            height: 40px;
-            background: rgba(20, 20, 30, 0.8);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 50%;
-            color: white;
-            font-size: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-        }
+/* トグルボタン */
+#toggle-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 101;
+    width: 40px;
+    height: 40px;
+    background: rgba(20, 20, 30, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    color: white;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
 
-        .value-display {
-            font-family: monospace;
-            color: #4fd1c5;
-        }
+.value-display {
+    font-family: monospace;
+    color: #4fd1c5;
+}
 
-        #recording-status {
-            color: #e53e3e;
-            font-weight: bold;
-            font-size: 12px;
-            text-align: center;
-            margin-bottom: 5px;
-            display: none;
-        }
+#recording-status {
+    color: #e53e3e;
+    font-weight: bold;
+    font-size: 12px;
+    text-align: center;
+    margin-bottom: 5px;
+    display: none;
+}
 
-        /* キーフレームアニメーション */
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(229, 62, 62, 0.7); }
-            70% { box-shadow: 0 0 0 10px rgba(229, 62, 62, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(229, 62, 62, 0); }
-        }
+/* キーフレームアニメーション */
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(229, 62, 62, 0.7); }
+    70% { box-shadow: 0 0 0 10px rgba(229, 62, 62, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(229, 62, 62, 0); }
+}
 
-        /* スクロールバー */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #1a1a1a;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #444;
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #555;
-        }
+/* スクロールバー */
+::-webkit-scrollbar {
+    width: 8px;
+}
+::-webkit-scrollbar-track {
+    background: #1a1a1a;
+}
+::-webkit-scrollbar-thumb {
+    background: #444;
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* ツールチップ関連 */
+.slider-container {
+    position: relative;
+}
+
+.input-wrapper {
+    position: relative;
+}
+
+.hint-cursor {
+    cursor: help !important;
+}
+
+.static-tooltip {
+    visibility: hidden;
+    position: absolute;
+    bottom: 120%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #333;
+    color: #fff;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 10px;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s, visibility 0.2s;
+    border: 1px solid #555;
+    z-index: 10;
+}
+
+.hint-cursor:hover + .static-tooltip {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* 個別ランダム化ボタン */
+.small-icon-btn {
+    background: transparent;
+    border: none;
+    padding: 0 4px;
+    font-size: 14px;
+    cursor: pointer;
+    color: #aaa;
+    transition: color 0.2s, transform 0.2s;
+    margin: 0;
+    width: auto;
+}
+
+.small-icon-btn:hover {
+    color: #fff;
+    background: transparent;
+    transform: scale(1.2);
+}
+
+/* カスタムドロップダウン関連 */
+#palette-dropdown-container {
+    margin-bottom: 8px;
+}
+
+.custom-dropdown {
+    position: relative;
+    width: 100%;
+    font-size: 12px;
+    user-select: none;
+}
+
+.custom-dropdown-selected {
+    background: #222;
+    border: 1px solid #555;
+    border-radius: 4px;
+    padding: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.custom-dropdown-options {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: #222;
+    border: 1px solid #555;
+    border-radius: 4px;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 1000;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    margin-top: 2px;
+}
+
+.custom-dropdown-options.show {
+    display: block;
+}
+
+.custom-dropdown-option {
+    padding: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.custom-dropdown-option:hover {
+    background: #333;
+}
+
+.color-strip {
+    display: flex;
+    height: 12px;
+    width: 100px;
+    border-radius: 2px;
+    overflow: hidden;
+    border: 1px solid #444;
+}
+
+.swatch {
+    flex: 1;
+}
