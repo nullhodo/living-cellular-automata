@@ -401,20 +401,10 @@ function updateColorPickers() {
 function randomizeParams() {
   params.cellSize = floor(random(2, 10));
   params.threshold = floor(random(1, 6));
-  params.range = random(1, 5); // Allow fractional range in randomize
+  params.range = parseFloat(random(1, 5).toFixed(1));
   params.states = floor(random(2, 6));
-  params.noise = random(0, 0.01);
   params.speed = floor(random(5, 11));
 
-  if (params.useGradient) {
-    params.gradientColorsCount = floor(random(2, 8));
-    params.gradientStartColor = "#" + hex(floor(random(256)), 2) + hex(floor(random(256)), 2) + hex(floor(random(256)), 2);
-    params.gradientEndColor = "#" + hex(floor(random(256)), 2) + hex(floor(random(256)), 2) + hex(floor(random(256)), 2);
-    generateGradientPalette();
-  } else {
-    applyRandomPalette();
-  }
-  
   updateUIFromParams();
   updateColorPickers();
   initGrid();
