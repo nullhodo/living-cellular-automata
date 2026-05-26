@@ -10,7 +10,7 @@ function initializeUI() {
   buildCustomPaletteDropdown();
 
   // スライダー生成ヘルパー
-  const createSlider = (key, label, min, max, step, callback = null) => {
+  const createSlider = (key, label, min, max, step, hint, callback = null) => {
     let div = document.createElement("div");
     div.className = "control-group slider-container";
     
@@ -76,7 +76,7 @@ function initializeUI() {
     // ツールチップ
     let tooltip = document.createElement("div");
     tooltip.className = "static-tooltip";
-    tooltip.innerText = `${label} の値を調整します`;
+    tooltip.innerText = hint;
 
     input.oninput = (e) => {
       let val = parseFloat(e.target.value);
@@ -132,19 +132,19 @@ function initializeUI() {
     params[`_ui_${key}`] = { input: checkbox, labelEl: div };
   };
 
-  createSlider("cellSize", "Cell Size (px)", 1, 20, 1);
-  createSlider("threshold", "Threshold (Neighbors)", 1, 8, 1);
-  createSlider("range", "Range (Radius)", 1, 10, 0.1);
-  createSlider("states", "States (Colors)", 2, 16, 1);
+  createSlider("cellSize", "Cell Size (px)", 1, 20, 1, "セルの大きさを変更します。大きくすると粗く、小さくすると緻密になります。");
+  createSlider("threshold", "Threshold (Neighbors)", 1, 8, 1, "セルが次の色に変化するために必要な、周囲の「次の色のセル」の最低数を設定します。");
+  createSlider("range", "Range (Radius)", 1, 10, 0.1, "各セルが周囲を確認する範囲（半径）を指定します。広げると波が大きく、滑らかになります。");
+  createSlider("states", "States (Colors)", 2, 16, 1, "状態（色）の数を変更します。色数が多いほど進化のサイクルが長くなり、複雑な模様が生まれます。");
   createCheckbox("useNoise", "Enable Noise");
-  createSlider("noise", "Noise (Mutation)", 0, 0.1, 0.001);
-  createSlider("speed", "Speed", 0, 20, 1);
+  createSlider("noise", "Noise (Mutation)", 0, 0.1, 0.001, "セルがランダムな色に突然変異する確率です。パターンが完全に停止するのを防ぎます。");
+  createSlider("speed", "Speed", 0, 20, 1, "シミュレーションが進行する速度を調整します。0にすると一時停止します。");
   createCheckbox("useGradient", "Gradation Mode", () => {
     updatePaletteModeUI();
     if (params.useGradient) generateGradientPalette();
     else applyPaletteFromSelect();
   });
-  createSlider("gradientColorsCount", "Gradient Colors", 2, 7, 1, () => {
+  createSlider("gradientColorsCount", "Gradient Colors", 2, 7, 1, "グラデーションを構成する色の数を指定します。", () => {
     if (params.useGradient) generateGradientPalette();
   });
 
