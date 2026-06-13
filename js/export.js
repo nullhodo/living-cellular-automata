@@ -30,6 +30,7 @@ function exportJsonc(baseFilename) {
     states: params.states,
     noise: params.noise,
     useNoise: params.useNoise,
+    neighborhoodType: params.neighborhoodType,
     useGradient: params.useGradient,
     gradientColorsCount: params.gradientColorsCount,
     gradientStartColor: params.gradientStartColor,
@@ -46,6 +47,7 @@ function exportJsonc(baseFilename) {
   jsonc += `  "states": ${exportData.states},     // Number of cyclic states\n`;
   jsonc += `  "noise": ${exportData.noise},    // Mutation probability\n`;
   jsonc += `  "useNoise": ${exportData.useNoise}, // Whether noise is enabled\n`;
+  jsonc += `  "neighborhoodType": "${exportData.neighborhoodType}", // Neighborhood shape (square or circle)\n`;
   jsonc += `  "useGradient": ${exportData.useGradient}, // Whether gradient mode is enabled\n`;
   jsonc += `  "gradientColorsCount": ${exportData.gradientColorsCount}, // Number of colors in gradient\n`;
   jsonc += `  "gradientStartColor": "${exportData.gradientStartColor}", // Start color of gradient\n`;
@@ -171,6 +173,8 @@ function loadSettingsFromFile(input) {
       if (data.states) params.states = data.states;
       if (data.noise !== undefined) params.noise = data.noise;
       if (data.useNoise !== undefined) params.useNoise = data.useNoise;
+      if (data.neighborhoodType !== undefined) params.neighborhoodType = data.neighborhoodType;
+      else params.neighborhoodType = "square";
       if (data.useGradient !== undefined) params.useGradient = data.useGradient;
       if (data.gradientColorsCount !== undefined) params.gradientColorsCount = data.gradientColorsCount;
       if (data.gradientStartColor !== undefined) params.gradientStartColor = data.gradientStartColor;

@@ -132,8 +132,75 @@ function initializeUI() {
     params[`_ui_${key}`] = { input: checkbox, labelEl: div };
   };
 
+  const createSelect = (key, label, optionsList, hint, callback = null) => {
+    let div = document.createElement("div");
+    div.className = "control-group select-container";
+    div.style.marginBottom = "8px";
+
+    let labelContainer = document.createElement("div");
+    labelContainer.style.display = "flex";
+    labelContainer.style.justifyContent = "space-between";
+    labelContainer.style.alignItems = "center";
+    labelContainer.style.marginBottom = "4px";
+
+    let titleSpan = document.createElement("span");
+    titleSpan.innerText = label;
+    titleSpan.style.fontSize = "12px";
+    titleSpan.style.color = "#ccc";
+
+    labelContainer.appendChild(titleSpan);
+
+    let selectWrapper = document.createElement("div");
+    selectWrapper.className = "input-wrapper";
+
+    let select = document.createElement("select");
+    select.style.width = "100%";
+    select.style.padding = "6px";
+    select.style.background = "#222";
+    select.style.color = "#fff";
+    select.style.border = "1px solid #444";
+    select.style.borderRadius = "4px";
+    select.style.marginBottom = "0";
+    select.className = "hint-cursor";
+
+    optionsList.forEach((opt) => {
+      let option = document.createElement("option");
+      option.value = opt.value;
+      option.text = opt.text;
+      if (params[key] === opt.value) {
+        option.selected = true;
+      }
+      select.appendChild(option);
+    });
+
+    let tooltip = document.createElement("div");
+    tooltip.className = "static-tooltip";
+    tooltip.innerText = hint;
+
+    select.onchange = (e) => {
+      params[key] = e.target.value;
+      if (callback) callback(e.target.value);
+      saveState();
+    };
+
+    selectWrapper.appendChild(select);
+    selectWrapper.appendChild(tooltip);
+
+    div.appendChild(labelContainer);
+    div.appendChild(selectWrapper);
+    container.appendChild(div);
+
+    params[`_ui_${key}`] = { input: select, labelEl: div };
+  };
+
   createSlider("cellSize", "Cell Size (px)", 1, 20, 1, "セルの大きさを変更します。大きくすると粗く、小さくすると緻密になります。");
   createSlider("threshold", "Threshold (Neighbors)", 1, 8, 1, "セルが次の色に変化するために必要な、周囲の「次の色のセル」の最低数を設定します。");
+  createSelect("neighborhoodType", "Neighborhood Type (近傍判定の形状)", [
+    { value: "square", text: "Square (四角形 - クラシック)" },
+    { value: "circle", text: "Circle (円形 - 小数点対応)" }
+  ], "近傍の判定方法を選びます。四角形はクラシックで、円形は細かい範囲調整が可能です。", () => {
+    initGrid();
+  });
   createSlider("range", "Range (Radius)", 1, 10, 0.1, "各セルが周囲を確認する範囲（半径）を指定します。広げると波が大きく、滑らかになります。");
   createSlider("states", "States (Colors)", 2, 16, 1, "状態（色）の数を変更します。色数が多いほど進化のサイクルが長くなり、複雑な模様が生まれます。");
   createCheckbox("useNoise", "Enable Noise");
@@ -412,7 +479,7 @@ function randomizeParams() {
 }
 
 function updateUIFromParams() {
-  const keys = ["cellSize", "threshold", "range", "states", "noise", "speed", "useNoise", "useGradient", "gradientColorsCount"];
+  const keys = ["cellSize", "threshold", "range", "states", "noise", "speed", "useNoise", "useGradient", "gradientColorsCount", "neighborhoodType"];
   keys.forEach((key) => {
     if (params[`_ui_${key}`]) {
       const ui = params[`_ui_${key}`];

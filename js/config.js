@@ -127,6 +127,7 @@ let params = {
   noise: 0.0, 
   useNoise: false, 
   speed: 1, 
+  neighborhoodType: "square", 
   useGradient: false,
   gradientColorsCount: 5,
   gradientStartColor: "#111111",

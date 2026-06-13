@@ -12,8 +12,11 @@ function initGrid() {
 
   simImage = createImage(columns, rows);
 
+  let numColors = paletteCache.length || 1;
+  let activeStates = Math.min(params.states, numColors);
+
   for (let i = 0; i < grid.length; i++) {
-    grid[i] = floor(random(params.states));
+    grid[i] = floor(random(activeStates));
   }
 }
 
@@ -29,7 +32,8 @@ function updatePaletteCache() {
 function updateGrid() {
   let numColors = paletteCache.length;
   let activeStates = Math.min(params.states, numColors);
-  let maxR = Math.ceil(params.range);
+  let isCircle = params.neighborhoodType === "circle";
+  let maxR = isCircle ? Math.ceil(params.range) : Math.floor(params.range);
   let rSq = params.range * params.range;
   let threshold = params.threshold;
 
@@ -53,7 +57,14 @@ function updateGrid() {
         for (let dx = -maxR; dx <= maxR; dx++) {
           if (dx === 0 && dy === 0) continue;
           
-          if (dx * dx + dy * dy <= rSq) {
+          let inNeighborhood = false;
+          if (isCircle) {
+            inNeighborhood = (dx * dx + dy * dy <= rSq);
+          } else {
+            inNeighborhood = (Math.max(Math.abs(dx), Math.abs(dy)) <= params.range);
+          }
+
+          if (inNeighborhood) {
             let nx = (x + dx + cols) % cols;
             if (grid[nx + yOffset] === nextStateVal) {
               count++;
